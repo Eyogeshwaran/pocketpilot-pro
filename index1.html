@@ -1,0 +1,818 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PocketPilot Pro — Intelligent Money Management</title>
+<meta name="theme-color" content="#101b17">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --bg:#f4f6f3;--surface:#fff;--ink:#17251f;--muted:#829088;
+  --green:#176b50;--deep:#102d23;--lime:#d9f77a;--line:#e7ece7;
+  --soft:#edf6f0;--red:#d84e61;--amber:#bd8531;
+  --shadow:0 8px 30px rgba(18,45,34,.055);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'DM Sans',sans-serif}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #9bcdb6;outline-offset:2px}
+.hidden{display:none!important}
+h1,h2,h3{font-family:Manrope,sans-serif;letter-spacing:-.5px}
+p{line-height:1.65}
+.muted{color:var(--muted)}
+.small{font-size:11px}
+.brand{display:flex;align-items:center;gap:10px;font:800 20px Manrope,sans-serif;letter-spacing:-.8px}
+.logo{width:39px;height:39px;border-radius:13px;display:grid;place-items:center;background:var(--lime);color:#183a2c;font-weight:900}
+.eyebrow{text-transform:uppercase;letter-spacing:1.8px;font-size:10px;font-weight:800;color:var(--green)}
+.btn{border:0;border-radius:12px;padding:12px 16px;font-weight:700;font-size:12px;transition:.18s}
+.btn:hover{transform:translateY(-1px)}
+.btn-primary{background:var(--green);color:white}
+.btn-primary:hover{background:#0d543e}
+.btn-light{background:#eff5f0;color:var(--green)}
+.btn-outline{background:transparent;border:1px solid var(--line);color:var(--muted)}
+.btn-danger{background:#fff0f1;color:var(--red)}
+.btn-block{width:100%}
+.field{margin-bottom:15px}
+.field label{display:block;font-size:12px;font-weight:700;margin-bottom:7px}
+.field input,.field select,.field textarea{
+  width:100%;border:1px solid var(--line);border-radius:18px;padding:12px;
+  background:#fbfcfa;color:var(--ink);font-size:13px
+}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--green);outline:2px solid #e0f0e6}
+.input-prefix{position:relative}
+.input-prefix span{position:absolute;left:12px;top:12px;color:var(--muted)}
+.input-prefix input{padding-left:29px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:19px;padding:21px;box-shadow:var(--shadow);min-width:0}
+.section-title{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px}
+.section-title h2{font-size:16px;margin:0}
+.section-title p{font-size:11px;color:var(--muted);margin:5px 0 0}
+.badge{display:inline-block;border-radius:30px;background:var(--soft);color:var(--green);font-size:10px;font-weight:800;padding:6px 9px}
+.badge.warn{background:#fff4df;color:#97631a}
+.badge.danger{background:#fff0f1;color:var(--red)}
+.progress{height:7px;background:#edf0ed;border-radius:20px;overflow:hidden;margin:12px 0 8px}
+.progress div{height:100%;background:var(--green);border-radius:20px;transition:width .25s}
+hr{border:0;border-top:1px solid var(--line);margin:18px 0}
+
+/* Welcome */
+.auth{min-height:100vh;display:grid;grid-template-columns:1.03fr .97fr;background:white}
+.auth-hero{padding:40px;display:flex;flex-direction:column;justify-content:space-between;color:white;background:radial-gradient(ellipse at 15% 15%,#28785a,transparent 38%),linear-gradient(145deg,#133e2f,#091e17)}
+.auth-hero .brand{font-size:21px}
+.hero-main{max-width:540px;margin:45px 0}
+.hero-main h1{font-size:clamp(40px,5vw,68px);line-height:1.04;letter-spacing:-3px;margin:17px 0}
+.hero-main h1 span{color:var(--lime)}
+.hero-main p{color:#c5d9ce;font-size:14px;max-width:440px}
+.hero-pills{display:flex;gap:8px;flex-wrap:wrap;margin-top:25px}
+.hero-pills span{border:1px solid #ffffff2a;border-radius:30px;padding:9px 12px;font-size:11px;color:#e2eee7}
+.hero-bottom{color:#a6c3b4;font-size:11px}
+.auth-side{display:grid;place-items:center;padding:35px 24px}
+.auth-form{width:100%;max-width:410px}
+.auth-form h2{font-size:31px;margin:9px 0}
+.auth-form>p{color:var(--muted);font-size:13px;margin-bottom:25px}
+.form-note{font-size:10px;color:var(--muted);line-height:1.7;margin-top:15px}
+.return-link{border:0;background:transparent;color:var(--green);font-size:12px;font-weight:700;margin-top:15px;padding:5px}
+
+/* App shell */
+.topbar{height:74px;padding:0 4.5%;background:linear-gradient(130deg,#155b44,#0d3327);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px}
+.topbar-right{display:flex;align-items:center;gap:12px}
+.user-chip{display:flex;align-items:center;gap:9px;background:#f3f6f3;padding:6px 11px 6px 6px;border-radius:30px;font-size:12px;font-weight:700}
+.avatar{width:32px;height:32px;display:grid;place-items:center;background:var(--lime);color:var(--deep);border-radius:50%;font-weight:900}
+.app-layout{max-width:1450px;margin:auto;display:grid;grid-template-columns:215px minmax(0,1fr);min-height:calc(100vh - 74px)}
+.sidebar{padding:25px 14px;border-right:1px solid var(--line);background:#fafbf9}
+.nav-label{font-size:9px;letter-spacing:1.6px;font-weight:800;color:#a0aaa2;padding:10px 12px}
+.nav-btn{width:100%;border:0;background:transparent;display:flex;align-items:center;gap:11px;padding:12px;border-radius:11px;text-align:left;color:#718078;font-size:12px;font-weight:700;margin-bottom:4px}
+.nav-btn .nav-icon{width:24px;text-align:center;font-size:17px}
+.nav-btn.active,.nav-btn:hover{background:#e8f3eb;color:var(--green)}
+.sidebar-tip{margin-top:28px;padding:15px;background:#edf5e7;border-radius:14px;font-size:11px;line-height:1.7;color:#54734f}
+.content{padding:30px 28px 45px;min-width:0}
+.view{display:none}
+.view.active{display:block}
+.page-head{display:flex;justify-content:space-between;align-items:flex-end;gap:14px;margin-bottom:23px}
+.page-head h1{font-size:29px;margin:7px 0}
+.page-head p{color:var(--muted);font-size:12px;margin:0}
+.grid{display:grid;gap:15px}
+.metrics{grid-template-columns:repeat(4,minmax(0,1fr));margin-bottom:16px}
+.metric{padding:19px}
+.metric-icon{width:34px;height:34px;display:grid;place-items:center;background:linear-gradient(130deg,#155b44,#0d3327);color:white;position:relative;overflow:hidden;border-radius:11px;margin-bottom:14px;font-size:16px}
+.metric-label{font-size:10px;color:var(--muted);font-weight:700}
+.metric-value{font:800 clamp(19px,2.1vw,27px) Manrope,sans-serif;letter-spacing:-1px;margin:10px 0;overflow-wrap:anywhere}
+.metric-foot{font-size:10px;color:var(--muted)}
+.hero-budget{background:linear-gradient(130deg,#155b44,#0d3327);color:white;position:relative;overflow:hidden}
+.hero-budget:after{content:"";position:absolute;width:170px;height:170px;right:-75px;top:-90px;border-radius:50%;border:1px solid #ffffff2b;box-shadow:0 0 0 25px #ffffff08,0 0 0 50px #ffffff05}
+.hero-budget .metric-label,.hero-budget .metric-foot{color:#c4ded1}
+.hero-budget .metric-value{color:var(--lime)}
+.hero-budget .progress{background:#ffffff2b}
+.hero-budget .progress div{background:var(--lime)}
+.dashboard-columns{grid-template-columns:minmax(0,1.25fr) minmax(280px,.85fr);margin-bottom:16px}
+.two-equal{grid-template-columns:repeat(2,minmax(0,1fr));margin-bottom:16px}
+.ai-card{background:linear-gradient(135deg,#172d24,#10241c);color:white;border:1px solid #254d3a}
+.ai-heading{display:flex;align-items:center;gap:12px}
+.ai-symbol{width:42px;height:42px;border-radius:14px;background:var(--lime);color:#153a2b;display:grid;place-items:center;font-weight:900;font-size:19px}
+.ai-heading h2{margin:0;font-size:16px}
+.ai-heading p{margin:4px 0 0;color:#b4c9bc;font-size:10px}
+.ai-list{display:grid;gap:10px;margin-top:18px}
+.ai-item{display:flex;gap:10px;padding:12px;border-radius:12px;background:#ffffff0b;border:1px solid #ffffff12;font-size:11px;line-height:1.7;color:#d8e6dc}
+.ai-dot{color:var(--lime);font-weight:900}
+.activity{display:grid}
+.tx{display:flex;align-items:center;gap:11px;padding:13px 0;border-bottom:1px solid linear-gradient(130deg,#155b44,#0d3327)}
+.tx:last-child{border-bottom:0}
+.tx-icon{width:39px;height:39px;display:grid;place-items:center;border-radius:13px;background:linear-gradient(130deg,#155b44,#0d3327);font-size:17px;flex-shrink:0}
+.tx-main{flex:1;min-width:0}
+.tx-main strong{display:block;font-size:12px;overflow-wrap:anywhere}
+.tx-main span{display:block;font-size:10px;color:var(--muted);margin-top:4px}
+.tx-end{text-align:right;white-space:nowrap}
+.tx-end strong{font-size:12px;display:block}
+.negative{color:var(--red)}.positive{color:var(--green)}
+.text-btn{border:0;background:transparent;color:var(--green);font-weight:800;font-size:11px;padding:5px}
+.empty{padding:25px 8px;text-align:center;font-size:12px;color:var(--muted);line-height:1.8}
+.empty strong{display:block;color:var(--ink);margin-bottom:5px}
+.quick-form{display:grid;gap:12px}
+.quick-form .field{margin:0}
+.quick-form .field input,.quick-form .field select{padding:11px}
+.segmented{display:grid;grid-template-columns:1fr 1fr;background:#eff2ef;padding:4px;border-radius:11px;gap:4px}
+.segmented button{border:0;border-radius:8px;background:transparent;padding:9px;font-size:11px;font-weight:800;color:var(--muted)}
+.segmented button.active{background:white;color:var(--green);box-shadow:0 2px 7px #0000000a}
+.table-wrap{overflow-x:auto}
+.data-table{width:100%;border-collapse:collapse;font-size:12px}
+.data-table th{text-align:left;color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.7px;padding:12px 9px;border-bottom:1px solid var(--line)}
+.data-table td{padding:14px 9px;border-bottom:1px solid #eff2ef}
+.data-table tr:last-child td{border-bottom:0}
+.inline-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.inline-form .field{margin:0}
+.inline-form .wide{grid-column:1/-1}
+.goal-item,.recurring-item{padding:15px;border:1px solid var(--line);border-radius:14px;margin-bottom:11px}
+.goal-top,.recurring-top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.goal-top strong,.recurring-top strong{font-size:12px}
+.goal-actions{display:flex;gap:7px;margin-top:12px}
+.goal-actions input{flex:1;min-width:0;width:50px;border:1px solid var(--line);border-radius:9px;padding:9px;font-size:11px}
+.goal-actions button{border:0;border-radius:9px;background:#edf5ee;color:var(--green);font-size:11px;font-weight:800;padding:9px}
+.recurring-item p{font-size:10px;color:var(--muted);margin:6px 0}
+.sim-box{background:#f3f8ed;border:1px solid #e5eed8;padding:17px;border-radius:14px;margin-top:14px;font-size:12px;line-height:1.8}
+.sim-box.bad{background:#fff1f1;border-color:#f5dede;color:#a33444}
+.sim-box.good{color:#1b644b}
+.insight-box{padding:16px;background:#f2f6f2;border-radius:13px;font-size:12px;line-height:1.8}
+.insight-box strong{display:block;margin-bottom:5px}
+.split-line{display:flex;justify-content:space-between;gap:10px;font-size:12px;margin:13px 0}
+.toast{position:fixed;bottom:20px;right:20px;z-index:20;background:#163b2d;color:white;padding:14px 18px;border-radius:12px;box-shadow:var(--shadow);font-size:12px;max-width:calc(100vw - 40px)}
+.mobile-nav{display:none}
+.footer{text-align:center;color:#9ba69f;font-size:10px;padding:22px 0}
+@media(max-width:1050px){.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.app-layout{grid-template-columns:175px minmax(0,1fr)}.sidebar{padding:20px 9px}.content{padding:24px 18px}}
+@media(max-width:760px){
+ .auth{grid-template-columns:1fr}.auth-hero{padding:25px;min-height:410px}.hero-main{margin:35px 0}.hero-main h1{font-size:43px}
+ .app-layout{display:block}.sidebar{display:none}.content{padding:22px 13px 90px}
+ .topbar{height:66px;padding:0 13px}.brand{font-size:17px}.topbar-right{gap:6px}.user-chip{padding:5px}.user-chip span{display:none}
+ .page-head{align-items:flex-start;flex-direction:column}.page-head h1{font-size:26px}
+ .dashboard-columns,.two-equal{grid-template-columns:1fr}
+ .mobile-nav{display:flex;position:fixed;z-index:15;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);justify-content:space-around;padding:8px 3px calc(8px + env(safe-area-inset-bottom))}
+ .mobile-nav button{border:0;background:transparent;color:var(--muted);font-size:9px;display:grid;gap:4px;justify-items:center;padding:4px}
+ .mobile-nav button span{font-size:19px}.mobile-nav button.active{color:var(--green);font-weight:800}
+ .inline-form{grid-template-columns:1fr}.inline-form .wide{grid-column:auto}
+}
+@media(max-width:400px){.metrics{gap:9px}.metric{padding:14px}.metric-value{font-size:20px}.metric-label{font-size:9px}.auth-side{padding:30px 18px}}
+</style>
+</head>
+<body>
+
+<!-- WELCOME / REGISTRATION -->
+<section id="authScreen" class="auth">
+  <div class="auth-hero">
+    <div class="brand"><div class="logo">P.</div>PocketPilot <span style="font-size:10px;color:#b8d5c4">PRO</span></div>
+    <div class="hero-main">
+      <div class="eyebrow" style="color:#d9f77a">INTELLIGENCE FOR EVERY RUPEE</div>
+      <h1>Your money.<br>Your future.<br><span>Your move.</span></h1>
+      <p>A personal financial command centre that helps you understand your habits, prepare for surprises and make more confident decisions.</p>
+      <div class="hero-pills"><span>✳ Smart insights</span><span>◈ Budget forecasting</span><span>↗ Goal tracking</span></div>
+    </div>
+    <div class="hero-bottom">POCKETPILOT PRO · HACKATHON EDITION · 2026</div>
+  </div>
+
+  <div class="auth-side">
+    <form id="registerForm" class="auth-form">
+      <div class="eyebrow">YOUR PERSONAL MONEY SPACE</div>
+      <h2 id="authTitle">Build your plan.</h2>
+      <p id="authSubtitle">A few details are all you need to start managing money more intentionally.</p>
+
+      <div class="field">
+        <label for="userName">Your name</label>
+        <input id="userName" maxlength="40" placeholder="e.g. Eyogesh" autocomplete="name" required>
+      </div>
+      <div class="field">
+        <label for="monthlyIncome">Monthly income (₹)</label>
+        <div class="input-prefix"><span>₹</span><input id="monthlyIncome" type="number" min="0" step=".01" placeholder="e.g. 25000" required></div>
+      </div>
+      <div class="field">
+        <label for="startingBudget">Budget for this plan (₹)</label>
+        <div class="input-prefix"><span>₹</span><input id="startingBudget" type="number" min=".01" step=".01" placeholder="e.g. 10000" required></div>
+      </div>
+      <div class="field">
+        <label for="planLength">Plan duration</label>
+        <select id="planLength"><option value="30">30 days — monthly challenge</option><option value="7">7 days — weekly reset</option><option value="14">14 days — two-week plan</option><option value="60">60 days — long-term plan</option></select>
+      </div>
+      <button class="btn btn-primary btn-block" type="submit">Launch my dashboard →</button>
+      <button class="return-link hidden" type="button" id="resumeBtn">Resume saved plan</button>
+      <div class="form-note">Demo privacy: your entries are saved in this browser only. This prototype has no real account authentication or bank connection. Do not enter sensitive account information.</div>
+    </form>
+  </div>
+</section>
+
+<!-- MAIN APP -->
+<section id="appShell" class="hidden">
+  <header class="topbar">
+    <div class="brand"><div class="logo">P.</div>PocketPilot <span style="font-size:10px;color:var(--green)">PRO</span></div>
+    <div class="topbar-right">
+      <div class="user-chip"><div class="avatar" id="avatar">A</div><span id="topName">User</span></div>
+      <button class="btn btn-outline" id="logoutBtn" type="button">↪ Log out</button>
+    </div>
+  </header>
+
+  <div class="app-layout">
+    <aside class="sidebar">
+      <div class="nav-label">WORKSPACE</div>
+      <button class="nav-btn active" data-view="dashboard"><span class="nav-icon">◫</span>Overview</button>
+      <button class="nav-btn" data-view="transactions"><span class="nav-icon">⇄</span>Transactions</button>
+      <button class="nav-btn" data-view="recurring"><span class="nav-icon">↻</span>Subscriptions</button>
+      <button class="nav-btn" data-view="commitments"><span class="nav-icon">▤</span>Commitments</button>
+      <button class="nav-btn" data-view="goals"><span class="nav-icon">◎</span>Savings goals</button>
+      <div class="nav-label" style="margin-top:18px">INTELLIGENCE</div>
+      <button class="nav-btn" data-view="copilot"><span class="nav-icon">✳</span>AI Copilot</button>
+      <button class="nav-btn" data-view="simulator"><span class="nav-icon">⌁</span>What-if lab</button>
+      <div class="sidebar-tip"><strong>✳ Pilot's note</strong><br>Small decisions become powerful when you can see their impact. Review your plan regularly.</div>
+    </aside>
+
+    <main class="content">
+      <!-- DASHBOARD -->
+      <section class="view active" id="view-dashboard">
+        <div class="page-head">
+          <div><div class="eyebrow">FINANCIAL COMMAND CENTRE</div><h1 id="welcomeTitle">Welcome back.</h1><p>Your money, at a glance. Your next move, made clearer.</p></div>
+          <div><span class="badge" id="planDay">DAY 1</span> <button class="btn btn-light" id="nextDayBtn" type="button">Next day →</button></div>
+        </div>
+
+        <div class="grid metrics">
+          <article class="card hero-budget">
+            <div class="metric-label">AVAILABLE PLAN BALANCE</div><div class="metric-value" id="available">₹0</div>
+            <div class="metric-foot" id="budgetFoot">Remaining from your starting budget</div>
+            <div class="progress"><div id="budgetBar" style="width:0%"></div></div>
+            <div class="metric-foot" id="spentFromBudget">₹0 spent so far</div>
+          </article>
+          <article class="card">
+            <div class="metric-icon">↗</div><div class="metric-label">MONTHLY INCOME</div><div class="metric-value" id="incomeMetric">₹0</div><div class="metric-foot">Registered income + added income</div>
+          </article>
+          <article class="card">
+            <div class="metric-icon">⌁</div><div class="metric-label">TOTAL EXPENSES</div><div class="metric-value" id="expenseMetric">₹0</div><div class="metric-foot" id="expenseFoot">Recorded expenses</div>
+          </article>
+          <article class="card">
+            <div class="metric-icon">◷</div><div class="metric-label">DAILY SPENDING GUIDE</div><div class="metric-value" id="dailyMetric">₹0</div><div class="metric-foot" id="daysFoot">Based on remaining days</div>
+          </article>
+        </div>
+
+        <div class="grid dashboard-columns">
+          <article class="card">
+            <div class="section-title"><div><h2>Recent activity</h2><p>Your latest money movements.</p></div><button class="text-btn" data-goto="transactions">View all →</button></div>
+            <div class="activity" id="recentList"></div>
+          </article>
+          <article class="card ai-card">
+            <div class="ai-heading"><div class="ai-symbol">✳</div><div><h2>Pilot AI Copilot</h2><p>YOUR PERSONAL MONEY INSIGHTS</p></div></div>
+            <div class="ai-list" id="dashboardInsights"></div>
+            <button class="btn" style="margin-top:15px;background:var(--lime);color:var(--deep)" data-goto="copilot">Explore insights →</button>
+          </article>
+        </div>
+
+        <div class="grid two-equal">
+          <article class="card">
+            <div class="section-title"><div><h2>Spending breakdown</h2><p>Expenses grouped by category.</p></div></div>
+            <div id="categoryBreakdown"></div>
+          </article>
+          <article class="card">
+            <div class="section-title"><div><h2>Upcoming obligations</h2><p>Subscriptions and commitments.</p></div><button class="text-btn" data-goto="commitments">Manage →</button></div>
+            <div id="upcomingList"></div>
+          </article>
+        </div>
+      </section>
+
+      <!-- TRANSACTIONS -->
+      <section class="view" id="view-transactions">
+        <div class="page-head"><div><div class="eyebrow">YOUR MONEY TRAIL</div><h1>Transactions</h1><p>Track every recorded rupee in one place.</p></div></div>
+        <div class="grid two-equal">
+          <article class="card">
+            <div class="section-title"><div><h2>Add transaction</h2><p>Record an expense or income.</p></div></div>
+            <form id="txForm" class="quick-form">
+              <div class="segmented"><button class="active" type="button" id="expenseTab">− Expense</button><button type="button" id="incomeTab">+ Income</button></div>
+              <div class="field"><label for="txTitle">Description</label><input id="txTitle" maxlength="60" placeholder="e.g. Lunch, books or stipend" required></div>
+              <div class="field"><label for="txAmount">Amount (₹)</label><input id="txAmount" type="number" min=".01" step=".01" placeholder="250" required></div>
+              <div class="field"><label for="txCategory">Category</label><select id="txCategory"><option>Food</option><option>Transport</option><option>Education</option><option>Shopping</option><option>Bills</option><option>Health</option><option>Entertainment</option><option>Salary</option><option>Emergency</option><option>Other</option></select></div>
+              <div class="field"><label for="txDate">Date</label><input id="txDate" type="date" required></div>
+              <button class="btn btn-primary" id="txSubmit" type="submit">Add expense</button>
+            </form>
+          </article>
+          <article class="card">
+            <div class="section-title"><div><h2>Money snapshot</h2><p>How your plan is being used.</p></div></div>
+            <div class="split-line"><span class="muted">Starting budget</span><strong id="snapBudget">₹0</strong></div>
+            <div class="split-line"><span class="muted">Expenses</span><strong class="negative" id="snapExpense">₹0</strong></div>
+            <div class="split-line"><span class="muted">Income added</span><strong class="positive" id="snapIncome">₹0</strong></div>
+            <hr><div class="split-line"><strong>Remaining budget</strong><strong id="snapRemaining">₹0</strong></div>
+            <div class="progress"><div id="snapBar" style="width:0%"></div></div>
+            <div class="small muted" id="snapText"></div>
+          </article>
+        </div>
+        <article class="card">
+          <div class="section-title"><div><h2>All transactions</h2><p>Remove a record if it was entered incorrectly.</p></div><span class="badge" id="txCount">0 records</span></div>
+          <div class="table-wrap"><table class="data-table"><thead><tr><th>Description</th><th>Category</th><th>Date</th><th>Type</th><th>Amount</th><th></th></tr></thead><tbody id="txTable"></tbody></table></div>
+        </article>
+      </section>
+
+      <!-- SUBSCRIPTIONS -->
+      <section class="view" id="view-recurring">
+        <div class="page-head"><div><div class="eyebrow">REPEATING PAYMENTS</div><h1>Subscriptions</h1><p>Spot recurring costs before they surprise you.</p></div></div>
+        <div class="grid two-equal">
+          <article class="card">
+            <div class="section-title"><div><h2>Add subscription</h2><p>Track a recurring service or membership.</p></div></div>
+            <form id="subForm" class="quick-form">
+              <div class="field"><label for="subName">Service name</label><input id="subName" maxlength="50" placeholder="e.g. Music subscription" required></div>
+              <div class="field"><label for="subAmount">Payment amount (₹)</label><input id="subAmount" type="number" min=".01" step=".01" required></div>
+              <div class="field"><label for="subFrequency">Frequency</label><select id="subFrequency"><option value="monthly">Monthly</option><option value="weekly">Weekly</option><option value="yearly">Yearly</option></select></div>
+              <div class="field"><label for="subDate">Next payment date</label><input id="subDate" type="date" required></div>
+              <button class="btn btn-primary" type="submit">+ Add subscription</button>
+            </form>
+          </article>
+          <article class="card">
+            <div class="section-title"><div><h2>Recurring cost outlook</h2><p>Estimated cost based on the listed subscriptions.</p></div></div>
+            <div class="metric-label">ESTIMATED MONTHLY EQUIVALENT</div><div class="metric-value" id="subMonthly">₹0</div>
+            <div class="metric-foot">Weekly amounts × 4.33; yearly amounts ÷ 12.</div>
+            <hr><div class="split-line"><span class="muted">Active subscriptions</span><strong id="subCount">0</strong></div>
+            <div class="split-line"><span class="muted">Next listed payment</span><strong id="subNext">None</strong></div>
+          </article>
+        </div>
+        <article class="card"><div class="section-title"><div><h2>Your subscriptions</h2><p>These are reminders, not actual payment connections.</p></div></div><div id="subList"></div></article>
+      </section>
+
+      <!-- COMMITMENTS & EMERGENCY -->
+      <section class="view" id="view-commitments">
+        <div class="page-head"><div><div class="eyebrow">PLAN FOR REAL LIFE</div><h1>Commitments & surprises</h1><p>Prepare for known obligations and unexpected costs.</p></div></div>
+        <div class="grid two-equal">
+          <article class="card">
+            <div class="section-title"><div><h2>Financial commitments</h2><p>Rent, fees, bills or other planned obligations.</p></div></div>
+            <form id="commitForm" class="quick-form">
+              <div class="field"><label for="commitName">Commitment name</label><input id="commitName" maxlength="50" placeholder="e.g. College fees" required></div>
+              <div class="field"><label for="commitAmount">Amount (₹)</label><input id="commitAmount" type="number" min=".01" step=".01" required></div>
+              <div class="field"><label for="commitDate">Due date</label><input id="commitDate" type="date" required></div>
+              <button class="btn btn-primary" type="submit">+ Add commitment</button>
+            </form>
+          </article>
+          <article class="card">
+            <div class="section-title"><div><h2>Emergency expense lab</h2><p>Test a surprise expense without recording it.</p></div></div>
+            <form id="emergencyForm" class="quick-form">
+              <div class="field"><label for="emergencyName">Unexpected situation</label><input id="emergencyName" maxlength="50" placeholder="e.g. Urgent repair" required></div>
+              <div class="field"><label for="emergencyAmount">Estimated cost (₹)</label><input id="emergencyAmount" type="number" min=".01" step=".01" required></div>
+              <button class="btn btn-primary" type="submit">Simulate emergency</button>
+            </form>
+            <div id="emergencyResult" class="sim-box">Test a surprise cost to see its possible effect on your budget.</div>
+          </article>
+        </div>
+        <article class="card"><div class="section-title"><div><h2>Upcoming commitments</h2><p>Track what you may need to set aside.</p></div><span class="badge" id="commitCount">0</span></div><div id="commitList"></div></article>
+      </section>
+
+      <!-- GOALS -->
+      <section class="view" id="view-goals">
+        <div class="page-head"><div><div class="eyebrow">MAKE SPACE FOR WHAT MATTERS</div><h1>Savings goals</h1><p>Turn big ambitions into visible progress.</p></div></div>
+        <div class="grid two-equal">
+          <article class="card">
+            <div class="section-title"><div><h2>Create a goal</h2><p>Name the goal and decide your target.</p></div></div>
+            <form id="goalForm" class="quick-form">
+              <div class="field"><label for="goalName">Goal name</label><input id="goalName" maxlength="50" placeholder="e.g. Laptop fund" required></div>
+              <div class="field"><label for="goalTarget">Target amount (₹)</label><input id="goalTarget" type="number" min=".01" step=".01" required></div>
+              <div class="field"><label for="goalInitial">Already saved (₹)</label><input id="goalInitial" type="number" min="0" step=".01" value="0" required></div>
+              <button class="btn btn-primary" type="submit">+ Create goal</button>
+            </form>
+          </article>
+          <article class="card">
+            <div class="section-title"><div><h2>Your goal portfolio</h2><p>A summary of your savings ambitions.</p></div></div>
+            <div class="metric-label">TOTAL TARGET</div><div class="metric-value" id="goalTotal">₹0</div>
+            <div class="split-line"><span class="muted">Amount saved toward goals</span><strong id="goalSaved">₹0</strong></div>
+            <div class="progress"><div id="goalBar" style="width:0%"></div></div>
+            <div class="small muted" id="goalSummary">Create your first goal to start tracking progress.</div>
+          </article>
+        </div>
+        <article class="card"><div class="section-title"><div><h2>Goal tracker</h2><p>Add contributions as your savings grow.</p></div></div><div id="goalList"></div></article>
+      </section>
+
+      <!-- AI COPILOT -->
+      <section class="view" id="view-copilot">
+        <div class="page-head"><div><div class="eyebrow">PERSONAL FINANCE INTELLIGENCE</div><h1>Pilot AI Copilot</h1><p>Understand your spending patterns and consider your next move.</p></div><span class="badge">LOCAL DEMO ENGINE</span></div>
+        <div class="grid two-equal">
+          <article class="card ai-card">
+            <div class="ai-heading"><div class="ai-symbol">✳</div><div><h2>Your money briefing</h2><p>INSIGHTS FROM YOUR CURRENT PLAN</p></div></div>
+            <div class="ai-list" id="fullInsights"></div>
+            <button class="btn" style="margin-top:15px;background:var(--lime);color:var(--deep)" id="refreshInsights">Refresh insights ↻</button>
+          </article>
+          <article class="card">
+            <div class="section-title"><div><h2>Projected spending</h2><p>Estimate for the end of your plan.</p></div></div>
+            <div class="metric-label">PROJECTED TOTAL EXPENSES</div><div class="metric-value" id="projectedExpense">₹0</div>
+            <div class="progress"><div id="projectedBar" style="width:0%"></div></div>
+            <div class="insight-box" id="projectionNote">Add expenses to create a projection.</div>
+            <hr>
+            <div class="split-line"><span class="muted">Known upcoming obligations</span><strong id="knownObligations">₹0</strong></div>
+            <div class="split-line"><span class="muted">Subscriptions / month</span><strong id="knownSubscriptions">₹0</strong></div>
+          </article>
+        </div>
+        <article class="card"><div class="section-title"><div><h2>How the Copilot works</h2><p>Transparency is part of good financial technology.</p></div></div><p class="muted" style="font-size:12px">This hackathon prototype uses rules and arithmetic on data entered in this browser. It is not a live large language model, does not access bank accounts, and does not guarantee future spending. To add a real AI model later, connect a secure backend to an AI API and never expose API keys in this HTML file.</p></article>
+      </section>
+
+      <!-- SIMULATOR -->
+      <section class="view" id="view-simulator">
+        <div class="page-head"><div><div class="eyebrow">TEST BEFORE YOU SPEND</div><h1>What-if lab</h1><p>Explore a decision before it becomes a transaction.</p></div></div>
+        <div class="grid two-equal">
+          <article class="card">
+            <div class="section-title"><div><h2>Purchase simulator</h2><p>Compare your budget before and after a purchase.</p></div></div>
+            <form id="purchaseForm" class="quick-form">
+              <div class="field"><label for="purchaseName">Purchase name</label><input id="purchaseName" maxlength="50" placeholder="e.g. New headphones" required></div>
+              <div class="field"><label for="purchaseAmount">Cost (₹)</label><input id="purchaseAmount" type="number" min=".01" step=".01" required></div>
+              <button class="btn btn-primary" type="submit">Run simulation</button>
+            </form>
+            <div id="purchaseResult" class="sim-box">Enter a purchase to see the estimated impact. Nothing is recorded automatically.</div>
+          </article>
+          <article class="card">
+            <div class="section-title"><div><h2>Budget scenario</h2><p>Test a different spending amount for the rest of your plan.</p></div></div>
+            <form id="scenarioForm" class="quick-form">
+              <div class="field"><label for="dailyScenario">Planned daily spending (₹)</label><input id="dailyScenario" type="number" min="0" step=".01" placeholder="e.g. 250" required></div>
+              <button class="btn btn-primary" type="submit">Forecast my plan</button>
+            </form>
+            <div id="scenarioResult" class="sim-box">Enter a daily spending estimate to project the remainder of your plan.</div>
+          </article>
+        </div>
+        <article class="card"><div class="section-title"><div><h2>Decision checklist</h2><p>A simple pause before a non-essential purchase.</p></div></div><div id="decisionChecklist"></div></article>
+      </section>
+
+      <div class="footer">POCKETPILOT PRO · HACKATHON PROTOTYPE · MADE FOR SMARTER MONEY HABITS</div>
+    </main>
+  </div>
+
+  <nav class="mobile-nav">
+    <button class="active" data-view="dashboard"><span>◫</span>Home</button>
+    <button data-view="transactions"><span>⇄</span>Activity</button>
+    <button data-view="recurring"><span>↻</span>Recurring</button>
+    <button data-view="goals"><span>◎</span>Goals</button>
+    <button data-view="copilot"><span>✳</span>AI</button>
+  </nav>
+</section>
+<div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
+
+<script>
+"use strict";
+
+const KEY = "pocketpilot-pro-hackathon-v1";
+let state = null;
+let txType = "expense";
+let toastTimer;
+
+const $ = id => document.getElementById(id);
+const today = () => new Date().toISOString().slice(0,10);
+
+function uid(){
+  return Date.now().toString(36) + Math.random().toString(36).slice(2,9);
+}
+function money(n){
+  return new Intl.NumberFormat("en-IN",{style:"currency",currency:"INR",maximumFractionDigits:2}).format(Number(n)||0);
+}
+function esc(v){
+  return String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+function toast(message){
+  $("toast").textContent=message;
+  $("toast").classList.remove("hidden");
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>$("toast").classList.add("hidden"),2600);
+}
+function save(){
+  try{localStorage.setItem(KEY,JSON.stringify(state));}
+  catch(e){toast("Browser storage is unavailable. Your latest changes may not persist.");}
+}
+function validDate(d){return /^\d{4}-\d{2}-\d{2}$/.test(d||"");}
+function load(){
+  try{
+    const x=JSON.parse(localStorage.getItem(KEY));
+    if(!x||typeof x.name!=="string"||!Number.isFinite(x.budget)||!Number.isFinite(x.income))return null;
+    x.transactions=Array.isArray(x.transactions)?x.transactions:[];
+    x.subscriptions=Array.isArray(x.subscriptions)?x.subscriptions:[];
+    x.commitments=Array.isArray(x.commitments)?x.commitments:[];
+    x.goals=Array.isArray(x.goals)?x.goals:[];
+    x.length=Number(x.length)||30;
+    x.day=Math.max(1,Math.min(x.length,Number(x.day)||1));
+    return x;
+  }catch(e){return null;}
+}
+function total(type){
+  return state.transactions.filter(t=>t.type===type).reduce((s,t)=>s+t.amount,0);
+}
+function spent(){return total("expense");}
+function addedIncome(){return total("income");}
+function remaining(){return state.budget-spent();}
+function daysRemaining(){return Math.max(1,state.length-state.day+1);}
+function dailyGuide(){return Math.max(0,remaining())/daysRemaining();}
+function monthlySubCost(){
+  return state.subscriptions.reduce((s,x)=>s+x.amount*(x.frequency==="weekly"?4.33:x.frequency==="yearly"?1/12:1),0);
+}
+function fmtDate(d){
+  if(!d)return "No date";
+  const date=new Date(d+"T12:00:00");
+  return isNaN(date)?d:date.toLocaleDateString("en-IN",{day:"numeric",month:"short",year:"numeric"});
+}
+function newPlan(name,income,budget,length){
+  return {name,income,budget,length,day:1,createdAt:today(),transactions:[],subscriptions:[],commitments:[],goals:[]};
+}
+function showAuth(){
+  $("appShell").classList.add("hidden");
+  $("authScreen").classList.remove("hidden");
+  $("resumeBtn").classList.toggle("hidden",!load());
+}
+function launch(){
+  $("authScreen").classList.add("hidden");
+  $("appShell").classList.remove("hidden");
+  showView("dashboard");
+  renderAll();
+}
+$("registerForm").addEventListener("submit",e=>{
+  e.preventDefault();
+  const name=$("userName").value.trim();
+  const income=Number($("monthlyIncome").value);
+  const budget=Number($("startingBudget").value);
+  const length=Number($("planLength").value);
+  if(!name||!Number.isFinite(income)||income<0||!Number.isFinite(budget)||budget<=0){
+    toast("Enter a name, valid income and a budget above zero.");return;
+  }
+  if(load()&&!confirm("Create a new plan? Your currently saved plan will be replaced."))return;
+  state=newPlan(name,income,budget,length);
+  save();launch();toast("Your financial command centre is ready.");
+});
+$("resumeBtn").addEventListener("click",()=>{
+  const saved=load();
+  if(!saved)return;
+  state=saved;launch();toast("Your saved plan is ready.");
+});
+$("logoutBtn").addEventListener("click",()=>{
+  if(!confirm("Log out of PocketPilot? Your plan will remain saved in this browser so you can resume it later."))return;
+  state=null;showAuth();toast("You have logged out.");
+});
+$("nextDayBtn").addEventListener("click",()=>{
+  if(state.day>=state.length){toast("You have reached the last day of this plan.");return;}
+  state.day++;save();renderAll();toast("Advanced to day "+state.day+".");
+});
+
+/* Navigation */
+function showView(name){
+  document.querySelectorAll(".view").forEach(v=>v.classList.toggle("active",v.id==="view-"+name));
+  document.querySelectorAll("[data-view]").forEach(b=>b.classList.toggle("active",b.dataset.view===name));
+  if(state)renderAll();
+}
+document.querySelectorAll("[data-view]").forEach(b=>b.addEventListener("click",()=>showView(b.dataset.view)));
+document.querySelectorAll("[data-goto]").forEach(b=>b.addEventListener("click",()=>showView(b.dataset.goto)));
+
+/* Transactions */
+$("txDate").value=today();
+$("subDate").value=today();
+$("commitDate").value=today();
+$("expenseTab").addEventListener("click",()=>setTxType("expense"));
+$("incomeTab").addEventListener("click",()=>setTxType("income"));
+function setTxType(type){
+  txType=type;
+  $("expenseTab").classList.toggle("active",type==="expense");
+  $("incomeTab").classList.toggle("active",type==="income");
+  $("txSubmit").textContent=type==="expense"?"Add expense":"Add income";
+  if(type==="income")$("txCategory").value="Salary";
+  else if($("txCategory").value==="Salary")$("txCategory").value="Food";
+}
+$("txForm").addEventListener("submit",e=>{
+  e.preventDefault();
+  const title=$("txTitle").value.trim(),amount=Number($("txAmount").value),date=$("txDate").value;
+  if(!title||!Number.isFinite(amount)||amount<=0||!validDate(date)){toast("Check the description, amount and date.");return;}
+  state.transactions.push({id:uid(),title,amount,date,category:$("txCategory").value,type:txType});
+  save();$("txForm").reset();$("txDate").value=today();setTxType("expense");renderAll();toast("Transaction added.");
+});
+function deleteTx(id){
+  if(!confirm("Remove this transaction?"))return;
+  state.transactions=state.transactions.filter(t=>t.id!==id);save();renderAll();toast("Transaction removed.");
+}
+function renderTransactions(){
+  const list=[...state.transactions].sort((a,b)=>b.date.localeCompare(a.date));
+  $("txCount").textContent=list.length+" record(s)";
+  $("txTable").innerHTML=list.length?list.map(t=>`
+    <tr><td><strong>${esc(t.title)}</strong></td><td>${esc(t.category)}</td><td>${esc(fmtDate(t.date))}</td>
+    <td><span class="badge ${t.type==="expense"?"danger":""}">${t.type==="expense"?"Expense":"Income"}</span></td>
+    <td class="${t.type==="expense"?"negative":"positive"}"><strong>${t.type==="expense"?"−":"+"}${money(t.amount)}</strong></td>
+    <td><button class="text-btn" data-del-tx="${esc(t.id)}">Remove</button></td></tr>`).join("")
+    :`<tr><td colspan="6"><div class="empty">No transactions yet.</div></td></tr>`;
+  $("txTable").querySelectorAll("[data-del-tx]").forEach(b=>b.addEventListener("click",()=>deleteTx(b.dataset.delTx)));
+  const icons={Food:"☕",Transport:"↗",Education:"▤",Shopping:"◇",Bills:"▧",Health:"✚",Entertainment:"♫",Salary:"↗",Emergency:"!",Other:"◈"};
+  $("recentList").innerHTML=list.slice(0,5).length?list.slice(0,5).map(t=>`
+    <div class="tx"><div class="tx-icon">${icons[t.category]||"◈"}</div>
+    <div class="tx-main"><strong>${esc(t.title)}</strong><span>${esc(t.category)} · ${esc(fmtDate(t.date))}</span></div>
+    <div class="tx-end"><strong class="${t.type==="expense"?"negative":"positive"}">${t.type==="expense"?"−":"+"}${money(t.amount)}</strong></div></div>`).join("")
+    :`<div class="empty"><strong>Your money story starts here.</strong>Add a transaction to see activity.</div>`;
+}
+
+/* Subscriptions */
+$("subForm").addEventListener("submit",e=>{
+  e.preventDefault();
+  const name=$("subName").value.trim(),amount=Number($("subAmount").value),date=$("subDate").value;
+  if(!name||!Number.isFinite(amount)||amount<=0||!validDate(date)){toast("Enter a valid subscription and payment date.");return;}
+  state.subscriptions.push({id:uid(),name,amount,frequency:$("subFrequency").value,date});
+  save();$("subForm").reset();$("subDate").value=today();renderAll();toast("Subscription reminder added.");
+});
+function renderSubs(){
+  const list=[...state.subscriptions].sort((a,b)=>a.date.localeCompare(b.date));
+  $("subMonthly").textContent=money(monthlySubCost());
+  $("subCount").textContent=list.length;
+  $("subNext").textContent=list.length?fmtDate(list[0].date):"None";
+  $("subList").innerHTML=list.length?list.map(s=>`
+    <div class="recurring-item"><div class="recurring-top"><div><strong>${esc(s.name)}</strong><p>${esc(s.frequency)} · Next date: ${esc(fmtDate(s.date))}</p></div><strong>${money(s.amount)}</strong></div>
+    <div class="goal-actions"><button data-sub-delete="${esc(s.id)}">Remove reminder</button></div></div>`).join("")
+    :`<div class="empty"><strong>No subscriptions tracked.</strong>Add recurring services to estimate their cost.</div>`;
+  $("subList").querySelectorAll("[data-sub-delete]").forEach(b=>b.addEventListener("click",()=>{
+    state.subscriptions=state.subscriptions.filter(s=>s.id!==b.dataset.subDelete);save();renderAll();toast("Subscription reminder removed.");
+  }));
+}
+
+/* Commitments */
+$("commitForm").addEventListener("submit",e=>{
+  e.preventDefault();
+  const name=$("commitName").value.trim(),amount=Number($("commitAmount").value),date=$("commitDate").value;
+  if(!name||!Number.isFinite(amount)||amount<=0||!validDate(date)){toast("Enter a valid commitment and due date.");return;}
+  state.commitments.push({id:uid(),name,amount,date});
+  save();$("commitForm").reset();$("commitDate").value=today();renderAll();toast("Commitment added.");
+});
+function renderCommitments(){
+  const list=[...state.commitments].sort((a,b)=>a.date.localeCompare(b.date));
+  $("commitCount").textContent=list.length+" listed";
+  $("commitList").innerHTML=list.length?list.map(c=>{
+    const overdue=c.date<today();
+    return `<div class="recurring-item"><div class="recurring-top"><div><strong>${esc(c.name)}</strong><p>Due ${esc(fmtDate(c.date))} ${overdue?"· Date has passed":""}</p></div><div style="text-align:right"><strong>${money(c.amount)}</strong><br><span class="badge ${overdue?"danger":"warn"}">${overdue?"Review date":"Planned"}</span></div></div>
+    <div class="goal-actions"><button data-commit-paid="${esc(c.id)}">Mark paid</button><button data-commit-delete="${esc(c.id)}">Remove</button></div></div>`;
+  }).join(""):`<div class="empty"><strong>No commitments yet.</strong>Add bills, fees or other planned costs.</div>`;
+  $("commitList").querySelectorAll("[data-commit-delete]").forEach(b=>b.addEventListener("click",()=>{
+    state.commitments=state.commitments.filter(c=>c.id!==b.dataset.commitDelete);save();renderAll();toast("Commitment removed.");
+  }));
+  $("commitList").querySelectorAll("[data-commit-paid]").forEach(b=>b.addEventListener("click",()=>{
+    const c=state.commitments.find(x=>x.id===b.dataset.commitPaid);
+    if(!c)return;
+    if(!confirm("Mark this commitment paid and record it as an expense?"))return;
+    state.transactions.push({id:uid(),title:c.name,amount:c.amount,date:today(),category:"Bills",type:"expense"});
+    state.commitments=state.commitments.filter(x=>x.id!==c.id);save();renderAll();toast("Payment recorded as an expense.");
+  }));
+  const future=list.filter(c=>c.date>=today()).slice(0,3);
+  $("upcomingList").innerHTML=future.length?future.map(c=>`<div class="split-line"><span>${esc(c.name)}<br><span class="small muted">${esc(fmtDate(c.date))}</span></span><strong>${money(c.amount)}</strong></div>`).join(""):`<div class="empty">No upcoming commitments listed.</div>`;
+}
+
+/* Goals */
+$("goalForm").addEventListener("submit",e=>{
+  e.preventDefault();
+  const name=$("goalName").value.trim(),target=Number($("goalTarget").value),saved=Number($("goalInitial").value);
+  if(!name||!Number.isFinite(target)||target<=0||!Number.isFinite(saved)||saved<0){toast("Check the goal details and amounts.");return;}
+  state.goals.push({id:uid(),name,target,saved:Math.min(saved,target)});
+  save();$("goalForm").reset();$("goalInitial").value="0";renderAll();toast("Savings goal created.");
+});
+function renderGoals(){
+  const list=state.goals;
+  const target=list.reduce((s,g)=>s+g.target,0),saved=list.reduce((s,g)=>s+g.saved,0);
+  $("goalTotal").textContent=money(target);$("goalSaved").textContent=money(saved);
+  $("goalBar").style.width=(target?Math.min(100,saved/target*100):0)+"%";
+  $("goalSummary").textContent=target?Math.round(saved/target*100)+"% of your combined targets reached.":"Create your first goal to start tracking progress.";
+  $("goalList").innerHTML=list.length?list.map(g=>{
+    const pct=Math.min(100,g.saved/g.target*100);
+    return `<div class="goal-item"><div class="goal-top"><strong>${esc(g.name)}</strong><span class="badge">${Math.round(pct)}%</span></div>
+    <div class="progress"><div style="width:${pct}%"></div></div>
+    <div class="split-line"><span class="muted">${money(g.saved)} saved</span><strong>Target ${money(g.target)}</strong></div>
+    <div class="goal-actions"><input type="number" min=".01" step=".01" id="goalAdd-${esc(g.id)}" placeholder="Contribution ₹" aria-label="Savings contribution">
+    <button data-goal-add="${esc(g.id)}">Add</button><button data-goal-delete="${esc(g.id)}">Remove</button></div></div>`;
+  }).join(""):`<div class="empty"><strong>Your goals start here.</strong>Choose something meaningful to save for.</div>`;
+  $("goalList").querySelectorAll("[data-goal-add]").forEach(b=>b.addEventListener("click",()=>{
+    const g=state.goals.find(x=>x.id===b.dataset.goalAdd),input=$("goalAdd-"+b.dataset.goalAdd),amount=Number(input.value);
+    if(!g||!Number.isFinite(amount)||amount<=0){toast("Enter a valid contribution.");return;}
+    g.saved=Math.min(g.target,g.saved+amount);save();renderAll();toast("Goal progress updated.");
+  }));
+  $("goalList").querySelectorAll("[data-goal-delete]").forEach(b=>b.addEventListener("click",()=>{
+    if(!confirm("Remove this savings goal?"))return;
+    state.goals=state.goals.filter(g=>g.id!==b.dataset.goalDelete);save();renderAll();toast("Goal removed.");
+  }));
+}
+
+/* Rule-based AI insights */
+function insights(){
+  const out=[],expense=spent(),left=remaining(),pct=state.budget?expense/state.budget*100:0;
+  const daysPassed=Math.max(1,state.length-daysRemaining()+1);
+  const projected=expense/daysPassed*state.length;
+  const commitments=state.commitments.reduce((s,c)=>s+c.amount,0);
+  const subs=monthlySubCost();
+  const cats={};
+  state.transactions.filter(t=>t.type==="expense").forEach(t=>cats[t.category]=(cats[t.category]||0)+t.amount);
+  const top=Object.entries(cats).sort((a,b)=>b[1]-a[1])[0];
+  if(!state.transactions.length)out.push("Start by recording your first transaction. Better data creates more useful spending insights.");
+  if(left<0)out.push("Your recorded expenses exceed the starting budget by "+money(-left)+". Review non-essential spending and upcoming obligations.");
+  else if(pct>=80)out.push("You have used "+Math.round(pct)+"% of your starting budget. Consider checking upcoming costs before optional purchases.");
+  else out.push("You have used "+Math.round(pct)+"% of your starting budget. Your current recorded spending is within the plan.");
+  if(top)out.push("Your largest recorded expense category is "+top[0]+" at "+money(top[1])+". Review whether that spending matches your priorities.");
+  if(expense>0&&projected>state.budget)out.push("At the current average pace, expenses could reach about "+money(projected)+" by the end of the plan. This is a simple projection, not a guarantee.");
+  if(commitments>Math.max(0,left))out.push("Listed commitments total "+money(commitments)+", more than your remaining budget. Check whether these costs need a separate funding source.");
+  else if(commitments>0)out.push("You have "+money(commitments)+" in listed commitments. Keep these planned costs in mind before spending the remaining balance.");
+  if(subs>0)out.push("Your tracked subscriptions are approximately "+money(subs)+" per month. Review which services you still use.");
+  if(!state.goals.length)out.push("Consider adding one savings goal so you can see how everyday choices connect to a longer-term target.");
+  else{
+    const totalTarget=state.goals.reduce((s,g)=>s+g.target,0),totalSaved=state.goals.reduce((s,g)=>s+g.saved,0);
+    out.push("Your savings goals total "+money(totalTarget)+", with "+money(totalSaved)+" recorded so far. Goal contributions are tracking entries and are not deducted from your budget automatically.");
+  }
+  return out.slice(0,6);
+}
+function renderInsights(){
+  const list=insights();
+  const html=list.map(t=>`<div class="ai-item"><span class="ai-dot">✳</span><span>${esc(t)}</span></div>`).join("");
+  $("dashboardInsights").innerHTML=list.slice(0,3).map(t=>`<div class="ai-item"><span class="ai-dot">✳</span><span>${esc(t)}</span></div>`).join("");
+  $("fullInsights").innerHTML=html;
+  const daysPassed=Math.max(1,state.length-daysRemaining()+1),projected=spent()/daysPassed*state.length;
+  $("projectedExpense").textContent=money(projected);
+  $("projectedBar").style.width=(state.budget?Math.min(100,projected/state.budget*100):0)+"%";
+  $("projectionNote").textContent=projected>state.budget
+    ?"Your current average spending pace projects above the starting budget. Consider reviewing the categories and upcoming costs."
+    :"Based on recorded expenses so far, the projected total is within the starting budget. Keep in mind that future costs can change.";
+  $("knownObligations").textContent=money(state.commitments.reduce((s,c)=>s+c.amount,0));
+  $("knownSubscriptions").textContent=money(monthlySubCost());
+}
+$("refreshInsights").addEventListener("click",()=>{renderInsights();toast("Insights refreshed using your latest entries.");});
+
+/* Simulators */
+$("purchaseForm").addEventListener("submit",e=>{
+  e.preventDefault();
+  const name=$("purchaseName").value.trim(),amount=Number($("purchaseAmount").value);
+  if(!name||!Number.isFinite(amount)||amount<=0){toast("Enter a valid purchase and cost.");return;}
+  const before=remaining(),after=before-amount;
+  $("purchaseResult").className="sim-box "+(after>=0?"good":"bad");
+  $("purchaseResult").innerHTML=`<strong>${esc(name)}</strong><br>Current balance: <strong>${money(before)}</strong><br>Purchase cost: <strong>${money(amount)}</strong><br>Estimated balance after purchase: <strong>${money(after)}</strong><br><br>${after>=0?"This fits within the remaining starting budget based on recorded expenses.":"This would exceed the remaining starting budget by "+money(-after)+". Consider a lower-cost alternative or review the plan."}<br><br><span class="small">Simulation only — no transaction was added.</span>`;
+});
+$("emergencyForm").addEventListener("submit",e=>{
+  e.preventDefault();
+  const name=$("emergencyName").value.trim(),amount=Number($("emergencyAmount").value);
+  if(!name||!Number.isFinite(amount)||amount<=0){toast("Enter a valid emergency scenario.");return;}
+  const after=remaining()-amount;
+  $("emergencyResult").className="sim-box "+(after>=0?"good":"bad");
+  $("emergencyResult").innerHTML=`<strong>${esc(name)}</strong><br>Current available budget: <strong>${money(remaining())}</strong><br>Unexpected cost: <strong>${money(amount)}</strong><br>Estimated balance: <strong>${money(after)}</strong><br><br>${after>=0?"Your current plan could absorb this example cost, based on recorded expenses.":"This example cost would exceed the remaining budget by "+money(-after)+". Consider how essential expenses could be covered."}<br><br><span class="small">Scenario only — nothing has been recorded.</span>`;
+});
+$("scenarioForm").addEventListener("submit",e=>{
+  e.preventDefault();
+  const perDay=Number($("dailyScenario").value);
+  if(!Number.isFinite(perDay)||perDay<0){toast("Enter a valid daily spending amount.");return;}
+  const cost=perDay*daysRemaining(),after=remaining()-cost;
+  $("scenarioResult").className="sim-box "+(after>=0?"good":"bad");
+  $("scenarioResult").innerHTML=`For the next <strong>${daysRemaining()} days</strong> at <strong>${money(perDay)} per day</strong>, estimated spending is <strong>${money(cost)}</strong>.<br>Estimated budget after that: <strong>${money(after)}</strong>.<br><br>${after>=0?"This scenario fits within your current remaining budget.":"This scenario exceeds your remaining budget by "+money(-after)+"."}<br><br><span class="small">Forecast only — no transactions were created.</span>`;
+});
+$("decisionChecklist").innerHTML=[
+  "Is this purchase necessary now, or can it wait?",
+  "Have I accounted for upcoming bills and commitments?",
+  "Will I still have enough for essential needs after buying it?",
+  "Have I compared a lower-cost alternative?"
+].map((s,i)=>`<label style="display:flex;gap:10px;align-items:flex-start;padding:12px 0;border-bottom:1px solid var(--line);font-size:12px"><input type="checkbox" style="accent-color:var(--green);margin-top:2px"><span>${esc(s)}</span></label>`).join("");
+
+/* Dashboard rendering */
+function renderBreakdown(){
+  const cats={};
+  state.transactions.filter(t=>t.type==="expense").forEach(t=>cats[t.category]=(cats[t.category]||0)+t.amount);
+  const entries=Object.entries(cats).sort((a,b)=>b[1]-a[1]).slice(0,6);
+  $("categoryBreakdown").innerHTML=entries.length?entries.map(([name,value])=>{
+    const pct=spent()?value/spent()*100:0;
+    return `<div style="margin-bottom:15px"><div class="split-line"><span>${esc(name)}</span><strong>${money(value)}</strong></div><div class="progress"><div style="width:${pct}%"></div></div></div>`;
+  }).join(""):`<div class="empty">Your category breakdown will appear after you record expenses.</div>`;
+}
+function renderAll(){
+  if(!state)return;
+  $("topName").textContent=state.name;
+  $("avatar").textContent=state.name.charAt(0).toUpperCase();
+  $("welcomeTitle").textContent="Welcome back, "+state.name+".";
+  $("planDay").textContent="DAY "+state.day+" OF "+state.length;
+  $("nextDayBtn").disabled=state.day>=state.length;
+  const exp=spent(),left=remaining(),pct=state.budget?Math.min(100,Math.max(0,exp/state.budget*100)):0;
+  $("available").textContent=money(left);
+  $("incomeMetric").textContent=money(state.income+addedIncome());
+  $("expenseMetric").textContent=money(exp);
+  $("dailyMetric").textContent=money(dailyGuide());
+  $("budgetFoot").textContent=left<0?"Over starting budget by "+money(-left):"Remaining from your starting budget";
+  $("spentFromBudget").textContent=money(exp)+" spent from "+money(state.budget);
+  $("budgetBar").style.width=pct+"%";
+  $("expenseFoot").textContent=Math.round(pct)+"% of starting budget used";
+  $("daysFoot").textContent=daysRemaining()+" plan day(s) remaining";
+  $("snapBudget").textContent=money(state.budget);
+  $("snapExpense").textContent=money(exp);
+  $("snapIncome").textContent=money(addedIncome());
+  $("snapRemaining").textContent=money(left);
+  $("snapBar").style.width=pct+"%";
+  $("snapText").textContent=left<0?"Recorded expenses exceed the starting budget.":"You have "+money(Math.max(0,left))+" remaining before considering future costs.";
+  renderTransactions();renderSubs();renderCommitments();renderGoals();renderBreakdown();renderInsights();
+}
+function init(){
+  const saved=load();
+  if(saved){state=saved;$("resumeBtn").classList.remove("hidden");}
+  else $("resumeBtn").classList.add("hidden");
+  showAuth();
+}
+init();
+</script>
+</body>
+</html>
